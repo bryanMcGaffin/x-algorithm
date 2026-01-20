@@ -405,7 +405,7 @@ class ViralityPredictorAgent:
                 avg = sum(values) / len(values)
                 current = getattr(self, f"{key}_weight")
                 new_weight = alpha * avg + (1 - alpha) * current
-                setattr(self, f"{key}_weight}", max(0.05, min(0.4, new_weight)))
+                setattr(self, f"{key}_weight", max(0.05, min(0.4, new_weight)))
 
     def get_viral_checklist(self) -> List[Dict[str, str]]:
         """Get checklist for viral content."""

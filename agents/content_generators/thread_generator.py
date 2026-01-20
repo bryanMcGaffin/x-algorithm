@@ -355,6 +355,29 @@ class ThreadGeneratorAgent(BaseContentGenerator):
 
         return random.choice([9, 10, 11, 14])
 
+    def _calculate_confidence(
+        self, thread_type: str, topics: List[str]
+    ) -> float:
+        """Calculate confidence score for generated thread."""
+        confidence = 0.5  # Base
+
+        # Boost for proven thread type
+        if thread_type in self.thread_performance:
+            confidence += 0.1 * min(1.0, self.thread_performance[thread_type])
+
+        # Boost for proven topics
+        for topic in topics:
+            if topic in self.topic_weights:
+                confidence += 0.05 * min(1.0, self.topic_weights[topic])
+
+        # Boost for trending content
+        if self.trend_data:
+            for topic in topics:
+                if topic in self.trend_data.trending_topics:
+                    confidence += 0.1
+
+        return min(1.0, confidence)
+
     def _calculate_thread_algorithm_score(self, content: ContentPiece) -> float:
         """Calculate algorithm alignment for threads."""
         score = 0.6  # Base score (threads inherently score well)
